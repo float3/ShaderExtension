@@ -1,4 +1,4 @@
-﻿namespace _3.Editor
+﻿namespace ShaderExtension
 {
     public interface IProperty
     {
