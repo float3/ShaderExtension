@@ -1,19 +1,24 @@
+#region
+
+using ShaderExtension.Interfaces;
+using ShaderExtension.PropertyDeclaration.Enums;
 using UnityEngine;
 
-namespace ShaderExtension
+#endregion
+
+namespace ShaderExtension.PropertyDeclaration
 {
     public class Float : IProperty
     {
         /// <summary>
-		/// Evem if a Shader Property is declared as a int it will still be a float internally
-        /// 
-		/// </summary>
-        public enum Type
-		{
-            Float,
-            Int,
-            Range
-		}
+        /// </summary>
+        public float DefaultValue;
+
+        /// <summary>
+        ///     This is the string that Unity displays in the inspector.
+        ///     "Example Display Name"
+        /// </summary>
+        public string DisplayName;
 
         /// <summary>
         ///     a material property attribute ex. "[HDR]" tells unity and the inspector
@@ -22,50 +27,39 @@ namespace ShaderExtension
         ///     "[IntRange]", "[Toggle]", "[Toggle(_)]"
         ///     Custom attributes are also valid.
         /// </summary>
-        public string[] materialPropertyAttributes;
+        public string[] MaterialPropertyAttributes;
 
         /// <summary>
         ///     Property name should start with a "_".
         ///     "_ExampleName", "_Example_Name_2"
         /// </summary>
-        public string name;
+        public string Name;
 
         /// <summary>
-		///     This is the string that Unity displays in the inspector.
-        ///     "Example Display Name"
+        ///     if the property is of Type "Range" it needs a min and a max
         /// </summary>
-        public string displayName;
+        public Vector2 Range;
 
         /// <summary>
-		///     Float, Int, Range
-		/// </summary>
-        public Type type;
-
-        /// <summary>
-        /// if the property is of Type "Range" it needs a min and a max
+        ///     Float, Int, Range
         /// </summary>
-        public Vector2 range;
+        public FloatType Type;
 
         /// <summary>
-        //      defaultValue
-        /// </summary>
-        public float defaultValue;
-
-        /// <summary>
-        /// returns the full declaration of the property
+        ///     returns the full declaration of the property
         /// </summary>
         /// <returns> example:"        [MainColor] _Cutoff("Cutoff", Range() = (1,1,1,1)"</returns>
         public string GetPropertyDeclaration()
         {
             string propertyDeclaration = "";
 
-            foreach (string materialPropertyAttribute in materialPropertyAttributes)
-			{
+            foreach (string materialPropertyAttribute in MaterialPropertyAttributes)
+            {
                 propertyDeclaration += $"{materialPropertyAttribute} ";
             }
 
-            string typeformat = type == Type.Range ? $"Range({range.x},{range.y})" : typeformat = type.ToString();
-            
+            string typeformat = Type == FloatType.Range ? $"Range({Range.x},{Range.y})" : typeformat = Type.ToString();
+
             /*if (type == Type.Range)
 			{
                 typeformat = $"Range({range.x},{range.y})";
@@ -76,9 +70,9 @@ namespace ShaderExtension
             }*/
 
             //propertyDeclaration += name + " (\"" + displayName + ", " + type + ") = (" + defaultValue + ")";
-            propertyDeclaration += ($"{name} (\"{displayName}, {typeformat}) = {defaultValue}");
+            propertyDeclaration += $"{Name} (\"{DisplayName}, {typeformat}) = {DefaultValue}";
 
             return propertyDeclaration;
-		}
+        }
     }
 }

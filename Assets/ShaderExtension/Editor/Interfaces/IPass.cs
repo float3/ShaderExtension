@@ -1,12 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace ShaderExtension
+﻿namespace ShaderExtension.Interfaces
 {
-	interface IPass
-	{
-	}
+    internal interface IPass
+    {
+    }
 }

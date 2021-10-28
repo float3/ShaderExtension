@@ -1,4 +1,4 @@
-﻿namespace ShaderExtension
+﻿namespace ShaderExtension.Interfaces
 {
     public interface IProperty
     {

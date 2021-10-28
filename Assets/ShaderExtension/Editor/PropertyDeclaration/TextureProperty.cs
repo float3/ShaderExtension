@@ -1,79 +1,44 @@
 ﻿#region
-using System.Diagnostics.CodeAnalysis;
+
+using ShaderExtension.Interfaces;
+using ShaderExtension.PropertyDeclaration.Enums;
+
 #endregion
-namespace ShaderExtension
+
+namespace ShaderExtension.PropertyDeclaration
 {
     public class Texture : IProperty
     {
-        [SuppressMessage("ReSharper", "InconsistentNaming")]
-        public enum DefaultValue
-        {
-            white,
-            black,
-            red,
-            gray,
-            grey,
-            linearGray,
-            linearGrey,
-            grayscaleRamp,
-            greyscaleRamp,
-            bump,
-            blackCube,
-            lightmap,
-            unity_Lightmap,
-            unity_LightmapInd,
-            unity_ShadowMask,
-            unity_DynamicLightmap,
-            unity_DynamicDirectionality,
-            unity_DynamicNormal,
-            unity_DitherMask,
-            _DitherMaskLOD,
-            _DitherMaskLOD2D,
-            unity_RandomRotation16,
-            unity_NHxRoughness,
-            unity_SpecCube0,
-            unity_SpecCube1
-        }
+        public DefaultTexture DefaultTexture;
 
-        public enum Type
-        {
-            _2D,
-            _2DArray,
-            _3D,
-            _Cube,
-            _CubeArray
-        }
+        /// <summary>
+        ///     This is the string that Unity displays in the inspector.
+        ///     "Example Display Name"
+        /// </summary>
+        public string DisplayName;
 
         /// <summary>
         ///     a material property attribute ex. "[HDR]" tells unity and the inspector
-		///     how to draw and interpret a property.
-		///     The built-in ones for Textures are these:
-		///     "[HDR]", "[HideInInspector]", "[MainTexture]", "[Normal]", "[NoScaleOffset]", "[PerRendererData]"
-		///     Custom attributes are also valid.
+        ///     how to draw and interpret a property.
+        ///     The built-in ones for Textures are these:
+        ///     "[HDR]", "[HideInInspector]", "[MainTexture]", "[Normal]", "[NoScaleOffset]", "[PerRendererData]"
+        ///     Custom attributes are also valid.
         /// </summary>
-        public string[] materialPropertyAttributes;
+        public string[] MaterialPropertyAttributes;
 
         /// <summary>
-		///     Property name should start with a "_".
+        ///     Property name should start with a "_".
         ///     "_ExampleName", "_Example_Name_2"
         /// </summary>
-        public string name;
-
-        /// <summary>
-		///     This is the string that Unity displays in the inspector.
-        ///     "Example Display Name"
-        /// </summary>
-        public string displayName;
+        public string Name;
 
         /// <summary>
         ///     2D,2DArray,3D,Cube,CubeArray
         /// </summary>
-        public Type type;
-
-        public DefaultValue defaultValue;
+        public TextureType Type;
 
         /// <summary>
-        /// returns the full declaration of the property
+        ///     returns the full declaration of the property
         /// </summary>
         /// <returns> example:"        [MainTexture] _MainTex ("Texture", 2D) = "white" {}"</returns>
         public string GetPropertyDeclaration()
@@ -86,12 +51,12 @@ namespace ShaderExtension
             //    propertyDeclaration += "[" + materialPropertyAttribute.Trim('[', ']') + "] ";
             //We don't!
 
-            foreach (string materialPropertyAttribute in materialPropertyAttributes)
+            foreach (string materialPropertyAttribute in MaterialPropertyAttributes)
             {
                 propertyDeclaration += $"{materialPropertyAttribute} ";
             }
 
-            propertyDeclaration += name + " (\"" + displayName + ", " + type.ToString() + ") = \"" + defaultValue.ToString() + "\" {}";
+            propertyDeclaration += Name + " (\"" + DisplayName + ", " + Type + ") = \"" + DefaultTexture + "\" {}";
 
             return propertyDeclaration;
         }
