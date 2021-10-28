@@ -28,6 +28,10 @@ namespace ShaderExtension
         private string[] _shaderLines;
         private string _shaderName;
 
+        public string FallBack;
+        public Shader FallBackShader;
+        public Block FallBackBlock;
+
         public Block ShaderNameBlock;
         public string SurfaceTempFilePath;
 
@@ -175,14 +179,14 @@ namespace ShaderExtension
 
                 while (fallThrough)
                 {
-                    Debug.Log("Looking for state " + state + " on line " + lineNum);
+                    //Debug.Log("Looking for state " + state + " on line " + lineNum);
                     fallThrough = false;
                     lineSkip = 0; // ???
                     switch (state)
                     {
                         case ParseState.ShaderName:
                         {
-                            int shaderOff = line.IndexOf("Shader", lineSkip, StringComparison.CurrentCulture);
+                            int shaderOff = line.IndexOf("Shader", lineSkip, StringComparison.Ordinal);
                             if (shaderOff != -1)
                             {
                                 int firstQuote = line.IndexOf('\"', shaderOff);
@@ -193,15 +197,32 @@ namespace ShaderExtension
                                     ShaderNameBlock = new Block(this, BlockType.ShaderName, lineNum, firstQuote + 1,
                                         lineNum, secondQuote);
                                     fallThrough = true;
-                                    state = ParseState.Properties;
+                                    state = ParseState.FallBack;
                                 }
                             }
                         }
                             break;
+                        case ParseState.FallBack:
+                            int fallBack = line.IndexOf("FallBack", lineSkip, StringComparison.Ordinal);
+                            if (fallBack != -1)
+                            {
+                                int firstQuote = line.IndexOf('\"', fallBack);
+                                int secondQuote = line.IndexOf('\"', firstQuote + 1);
+                                if (firstQuote != -1 && secondQuote != -1)
+                                {
+                                    FallBack = line.Substring(firstQuote + 1, secondQuote - firstQuote - 1);
+                                    FallBackBlock = new Block(this, BlockType.FallBack, lineNum, firstQuote + 1,
+                                        lineNum, secondQuote);
+                                    fallThrough = true;
+                                    state = ParseState.Properties;
+                                }
+                            }
+
+                            break;
                         case ParseState.Properties:
                         {
                             // Find beginning of Properties block
-                            int shaderOff = line.IndexOf("Properties", lineSkip, StringComparison.CurrentCulture);
+                            int shaderOff = line.IndexOf("Properties", lineSkip, StringComparison.Ordinal);
                             if (shaderOff != -1)
                             {
                                 state = ParseState.PropertiesBlock;
@@ -218,7 +239,7 @@ namespace ShaderExtension
                             while (lineSkip < line.Length && i < 10000)
                             {
                                 i++;
-                                int openQuote = line.IndexOf("\"", lineSkip, StringComparison.CurrentCulture);
+                                int openQuote = line.IndexOf("\"", lineSkip, StringComparison.Ordinal);
                                 if (isOpenQuote)
                                 {
                                     if (openQuote == -1)
@@ -245,8 +266,8 @@ namespace ShaderExtension
                                     continue;
                                 }
 
-                                int openBrace = line.IndexOf("{", lineSkip, StringComparison.CurrentCulture);
-                                int closeBrace = line.IndexOf("}", lineSkip, StringComparison.CurrentCulture);
+                                int openBrace = line.IndexOf("{", lineSkip, StringComparison.Ordinal);
+                                int closeBrace = line.IndexOf("}", lineSkip, StringComparison.Ordinal);
                                 if (openQuote != -1 && (openQuote < openBrace || openBrace == -1) &&
                                     (openQuote < closeBrace || closeBrace == -1))
                                 {
@@ -353,7 +374,7 @@ namespace ShaderExtension
                             break;
                         case ParseState.SubShaderCg:
                         case ParseState.PassCg:
-                            int endCg = line.IndexOf("ENDCG", lineSkip, StringComparison.CurrentCulture);
+                            int endCg = line.IndexOf("ENDCG", lineSkip, StringComparison.Ordinal);
                             if (endCg != -1)
                             {
                                 string buf = "";

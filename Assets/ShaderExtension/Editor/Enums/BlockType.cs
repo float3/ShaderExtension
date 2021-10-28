@@ -8,6 +8,7 @@
         CgInclude = 2,
         CgProgram = 3,
         GrabPass = 4,
-        Pass = 5
+        Pass = 5,
+        FallBack = 6
     }
 }

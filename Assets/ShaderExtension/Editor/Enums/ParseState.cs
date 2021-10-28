@@ -8,6 +8,7 @@
         SubShader = 3,
         PassBlock = 4,
         SubShaderCg = 6,
-        PassCg = 7
+        PassCg = 7,
+        FallBack = 8
     }
 }

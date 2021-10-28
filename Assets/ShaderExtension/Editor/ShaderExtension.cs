@@ -30,6 +30,35 @@ namespace ShaderExtension
             AssetDatabase.ImportAsset(path);
         }
 
+        public static void ReplaceFallBack(this Shader shader)
+        {
+            ParsedShader parsedShader = new ParsedShader(shader);
+
+            string path = AssetDatabase.GetAssetPath(parsedShader.Shader);
+
+            string[] lines = File.ReadAllLines(path);
+            int lineNum = -1;
+            string[] newLines = new string[lines.Length];
+            foreach (string line in lines)
+            {
+                lineNum++;
+                if (lineNum >= parsedShader.FallBackBlock.BeginLineNum &&
+                    lineNum <= parsedShader.FallBackBlock.EndLineNum)
+                {
+                    newLines[lineNum] = lines[lineNum].Replace("Diffuse", "Standard");
+                }
+                else
+                {
+                    newLines[lineNum] = lines[lineNum];
+                }
+            }
+
+            File.WriteAllLines(path, newLines);
+
+
+            AssetDatabase.ImportAsset(path);
+        }
+
         private static void InsertLineInFile(string path, string line, int position)
         {
             string[] lines = File.ReadAllLines(path);
