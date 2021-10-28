@@ -19,6 +19,7 @@ namespace ShaderExtension.PropertyDeclaration.Enums
         grayscaleRamp,
         greyscaleRamp,
         bump,
+        whiteCube,
         blackCube,
         lightmap,
         unity_Lightmap,
